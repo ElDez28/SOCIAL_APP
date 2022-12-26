@@ -7,6 +7,7 @@ const userRouter = require("./routes/userRoutes");
 const postRouter = require("./routes/postRoutes");
 const conversationsRouter = require("./routes/conversationRouter");
 const messagesRouter = require("./routes/messagesRoutes");
+const commentsRouter = require("./routes/commentRoutes");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const path = require("path");
@@ -33,6 +34,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/conversations", conversationsRouter);
 app.use("/api/v1/messages", messagesRouter);
+app.use("/api/v1/comments", commentsRouter);
 
 app.use((err, req, res, next) => {
   if (req.file) {

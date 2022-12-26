@@ -4,11 +4,7 @@ const userController = require("../controllers/userController");
 const authController = require("../controllers/authController");
 router
   .route("/")
-  .get(
-    authController.protect,
-    // authController.restrict,
-    userController.getAllUsers
-  )
+  .get(authController.protect, userController.getAllUsers)
   .post(
     authController.protect,
     authController.restrict,
@@ -35,9 +31,9 @@ router
     userController.updateUser
   )
   .delete(
-    // authController.protect,
-    // authController.restrict,
-    userController.deleteUser()
+    authController.protect,
+    authController.restrict,
+    userController.deleteUser
   );
 
 router

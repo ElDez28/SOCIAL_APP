@@ -3,6 +3,8 @@ const catchAsync = require("../util/catchAsync");
 const AppError = require("../util/appError");
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
+const crypto = require("crypto");
+
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
@@ -105,6 +107,5 @@ exports.restrict = (req, res, next) => {
       new AppError("You do not have a permission to perform this action", 401)
     );
   }
-
   next();
 };

@@ -3,10 +3,28 @@ const Post = require("../models/postModel");
 const catchAsync = require("../util/catchAsync");
 const AppError = require("../util/appError");
 const multer = require("multer");
+const Comment = require("../models/Comment");
+const APIFeatures = require("../controllers/apiFeatures");
 const { v1: uuid } = require("uuid");
-exports.getAllPosts = factory.getAll(Post, "userId");
+// exports.getAllPosts = factory.getAll(Post, ["userId"]);
 exports.deletePost = factory.deleteOne(Post);
 exports.getOnePost = factory.getOne(Post);
+
+exports.getAllPosts = catchAsync(async (req, res, next) => {
+  const query = Post.find().populate("userId");
+  const features = new APIFeatures(query, req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const posts = await features.query;
+  const comments = await Comment.find();
+  res.status(200).json({
+    message: "success",
+    data: posts,
+    comments,
+  });
+});
 
 exports.updateMyPost = catchAsync(async (req, res, next) => {
   const post = await Post.findById(req.params.id);
@@ -68,7 +86,8 @@ exports.lovePost = catchAsync(async (req, res, next) => {
 });
 
 exports.getUserPosts = catchAsync(async (req, res, next) => {
-  const posts = await Post.find({ userId: req.params.id });
+  const posts = await Post.find({ userId: req.params.id }).populate("comments");
+
   res.status(200).json({
     status: "success",
     data: posts,
